@@ -27,12 +27,20 @@ export default function Home() {
 
 	// Fetch data from DB getUserList
 	const getPeopleList = () => {
+		setLoading(true);
 		fetch("http://localhost:3000/api/getPeopleList")
-			.then((res) => res.json())
+			.then((response) => {
+				if (response.ok) {
+					return response.json();
+				} else {
+					throw new Error("Something went wrong");
+				}
+			})
 			.then((data) => {
 				setPeople(data);
+				setLoading(false);
 			})
-			.catch(alert("Ups, something went wrong!"));
+			.catch((error) => alert(error));
 	};
 
 	const handleGetName = () => {
