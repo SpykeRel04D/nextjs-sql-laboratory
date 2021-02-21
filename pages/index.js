@@ -3,9 +3,10 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
-	const [isLoading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [apiName, setApiName] = useState("Waiting for name..");
 	const [apiDate, setApiDate] = useState("Waiting for date..");
+	const [people, setPeople] = useState("");
 
 	// Async await call
 	const fetchName = async () => {
@@ -24,6 +25,16 @@ export default function Home() {
 			});
 	};
 
+	// Fetch data from DB getUserList
+	const getPeopleList = () => {
+		fetch("http://localhost:3000/api/getPeopleList")
+			.then((res) => res.json())
+			.then((data) => {
+				setPeople(data);
+			})
+			.catch(alert("Ups, something went wrong!"));
+	};
+
 	const handleGetName = () => {
 		setLoading(true);
 		fetchName();
@@ -39,10 +50,11 @@ export default function Home() {
 			<main className={styles.main}>
 				<h1 className={styles.title}>Welcome to NextJS SQL Playground</h1>
 				<div className={styles.laboratory}>
+					<h2>Basic API fetch data</h2>
 					<div className={styles.labDiv}>
 						<div className={styles.experiment}>
 							<span>Click to receive name from /api: </span>
-							<button onClick={() => handleGetName()} disabled={isLoading}>
+							<button onClick={() => handleGetName()} disabled={loading}>
 								Receive Data
 							</button>
 						</div>
@@ -55,13 +67,35 @@ export default function Home() {
 					<div className={styles.labDiv}>
 						<div className={styles.experiment}>
 							<span>Click to receive date from /api: </span>
-							<button onClick={() => fetchDate()} disabled={isLoading}>
+							<button onClick={() => fetchDate()} disabled={loading}>
 								Receive Data
 							</button>
 						</div>
 						<div className={styles.result}>
 							<span>Current nameDate: </span>
 							{apiDate}
+						</div>
+					</div>
+				</div>
+				<div className={styles.laboratory}>
+					<h2>Basic SQL serverless fetch</h2>
+					<div className={styles.labDiv}>
+						<div className={styles.experiment}>
+							<span>Click to receive people list from SQL: </span>
+							<button onClick={() => getPeopleList()} disabled={loading}>
+								Receive Data
+							</button>
+						</div>
+						<div className={styles.result}>
+							<span>Current people list: </span>
+							<ul>
+								{people &&
+									people.map((item, i) => (
+										<li key={i}>
+											{item.name} {item.surname}
+										</li>
+									))}
+							</ul>
 						</div>
 					</div>
 				</div>

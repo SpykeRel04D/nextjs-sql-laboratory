@@ -57,6 +57,12 @@
 	text-align: center;
 }
 
+.laboratory h2 {
+	margin: 0;
+	margin-bottom: 20px;
+	border-bottom: 1px dotted gray;
+}
+
 .logo {
 	height: 1em;
 }
