@@ -1,65 +1,81 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState } from "react";
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+	const [isLoading, setLoading] = useState(false);
+	const [apiName, setApiName] = useState("Waiting for name..");
+	const [apiDate, setApiDate] = useState("Waiting for date..");
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+	// Async await call
+	const fetchName = async () => {
+		const req = await fetch("http://localhost:3000/api/hello");
+		const data = await req.json();
+		setLoading(false);
+		return setApiName(data.name);
+	};
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+	// Fetch then catch
+	const fetchDate = () => {
+		fetch("http://localhost:3000/api/date")
+			.then((res) => res.json())
+			.then((data) => {
+				setApiDate(data.date);
+			});
+	};
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+	const handleGetName = () => {
+		setLoading(true);
+		fetchName();
+	};
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+	return (
+		<div className={styles.container}>
+			<Head>
+				<title>NextJS SQL Playground</title>
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+			<main className={styles.main}>
+				<h1 className={styles.title}>Welcome to NextJS SQL Playground</h1>
+				<div className={styles.laboratory}>
+					<div className={styles.labDiv}>
+						<div className={styles.experiment}>
+							<span>Click to receive name from /api: </span>
+							<button onClick={() => handleGetName()} disabled={isLoading}>
+								Receive Data
+							</button>
+						</div>
+						<div className={styles.result}>
+							<span>Current name: </span>
+							{apiName}
+						</div>
+					</div>
+					<hr />
+					<div className={styles.labDiv}>
+						<div className={styles.experiment}>
+							<span>Click to receive date from /api: </span>
+							<button onClick={() => fetchDate()} disabled={isLoading}>
+								Receive Data
+							</button>
+						</div>
+						<div className={styles.result}>
+							<span>Current nameDate: </span>
+							{apiDate}
+						</div>
+					</div>
+				</div>
+			</main>
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+			<footer className={styles.footer}>
+				<a
+					href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Powered by <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
+				</a>
+			</footer>
+		</div>
+	);
 }
