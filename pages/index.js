@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -99,8 +100,15 @@ export default function Home() {
 							<ul>
 								{people &&
 									people.map((item, i) => (
-										<li key={i}>
-											{item.name} {item.surname}
+										<li className={styles.person} key={i}>
+											<span>
+												{item.name} {item.surname}
+											</span>
+											<button>
+												<Link href={`/persona/${item.id}`}>
+													<a>View</a>
+												</Link>
+											</button>
 										</li>
 									))}
 							</ul>

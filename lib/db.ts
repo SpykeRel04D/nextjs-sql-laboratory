@@ -10,7 +10,6 @@ export const db = mysql({
 });
 
 export async function query(q: string, values: (string | number)[] | string | number = []) {
-	console.log(process.env.MYSQL_DATABASE);
 	try {
 		const results = await db.query(q, values);
 		await db.end();
